@@ -1,10 +1,18 @@
+function test() {
+    // const text1 = document.getElementById("text1").value;
+
+
+    // // Send the API requests
+    // sendApiRequest("http://localhost:80/text1/", text1, "response1");
+}
+
 function submitText1() {
     // Get the input values
     const text1 = document.getElementById("text1").value;
 
 
     // Send the API requests
-    sendApiRequest("localhost/text1", text1, "response1");
+    sendApiRequest("http://localhost:80/text1/", text1, "response1");
 }
 
 function submitText2() {
@@ -12,7 +20,7 @@ function submitText2() {
     const text = document.getElementById("text2").value;
 
     // Send the API requests
-    sendApiRequest("localhost/text2", text, "response2");
+    sendApiRequest("http://localhost:80/text2/", text, "response2");
 }
 
 function submitText3() {
@@ -20,7 +28,7 @@ function submitText3() {
     const text = document.getElementById("text3").value;
 
     // Send the API requests
-    sendApiRequest("localhost/text3", text, "response3");
+    sendApiRequest("http://localhost:80/text3/", text, "response3");
 }
 
 async function sendApiRequest(url, text, responseId) {
@@ -34,8 +42,8 @@ async function sendApiRequest(url, text, responseId) {
     });
 
     // Get the response from the API
-    const data = await response.json();
-
+    let data = await response.json();
+    data = data.response
     // Display the response under the input field
     const responseDiv = document.getElementById(responseId);
     responseDiv.innerHTML = data;

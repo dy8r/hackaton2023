@@ -1,37 +1,56 @@
-import openai
-from config import OPENAI_API_KEY
+from flask import Flask, jsonify, request, session
+from flask_restful import Api, Resource
+from datetime import datetime, timedelta
+from functools import wraps
+import json
+import time
+from dateutil import parser
+import os
+from time import sleep
+import requests
+from flask_cors import CORS
+from gpt import send_request_to_openai
 
-openai.api_key = OPENAI_API_KEY
+app = Flask(__name__)
+api = Api(app)
+CORS(app)
 
-prompt = """I have a database that has user_id(int), sum(int), category_type(text) and transaction_date(YYYY-MM-DD) fields.
-It is used for personal finance tracking.
-Possible category_type fields are: "food", "shopping", "housing"
-User with ID = 12345 prompts: "What did I spend more on: food this month or shopping in last month?"
-Reply with an sql query to get what user prompted from database. Do not provide explanation, give me pure code
-For reference, datetime now is 10:09 25.02.2023"""
 
-response = openai.Completion.create(
-    model="text-davinci-003",
-    prompt=prompt,
-    max_tokens=1024,
-    n=1,
-    stop=None,
-    temperature=0.2,
-    )
+class TextOne(Resource):
+    def post(self):
+        try:
+            req = request.get_json()
+            print(req)
+            prompt = req['text']
+            response = send_request_to_openai(prompt)
+            print(response)
+            return {"status": "success", 'response': response}
+        except Exception as e:
+            print(e)
+            return {'status': str(e)}
+        
+class TextTwo(Resource):
+    def post(self):
+        try:
 
-print(response.choices[0].text.strip())
+            return {"status": "success"}
+        except Exception as e:
+            print(e)
+            return {'status': str(e)}
+        
+class TextThree(Resource):
+    def post(self):
+        try:
 
-ret = input('\nsql returned\n')
+            return {"status": "success"}
+        except Exception as e:
+            print(e)
+            return {'status': str(e)}
 
-prompt_2  = "I have gave you a prompt: " + prompt + """. Your responsne was: """ + response.choices[0].text.strip() + """The result was: """ +  ret +""". Give me an answer the user's original prompt"""
+api.add_resource(TextOne, "/text1/")
+api.add_resource(TextTwo, "/text2/")
+api.add_resource(TextThree, "/text3/")
 
-response = openai.Completion.create(
-    model="text-davinci-003",
-    prompt=prompt_2,
-    max_tokens=1024,
-    n=1,
-    stop=None,
-    temperature=0.2,
-    )
-
-print(response.choices[0].text.strip())
+if __name__ == "__main__":
+    app.run(host = '0.0.0.0', port = 80, debug = False)
+    # app.run(debug = True)
