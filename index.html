@@ -3,23 +3,105 @@
 
 <head>
     <title>Budget Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F2F2F2;
+        }
+
+        h1 {
+            color: #222222;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        form {
+            width: 50%;
+            margin: 40px auto;
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #222222;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 15px;
+            /* Add equal padding on top/bottom and left/right */
+            border-radius: 5px;
+            border: 1px solid #CCCCCC;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            /* Include padding in the width calculation */
+        }
+
+        button[type="button"] {
+            background-color: #222222;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #response1,
+        #response2 {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #EFEFEF;
+            border-radius: 5px;
+            color: #222222;
+        }
+
+        #response2 {
+            margin-top: 40px;
+        }
+
+        p.instructions {
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+            color: #666666;
+        }
+
+        p.tips {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #222222;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Budget Tracker</h1>
-    <form>
-        <label for="text1">Any updates to your budget? </label>
-        <input type="text" id="text1" name="text1">
-        <button type="button" onclick="submitText1()">Send</button><br><br>
+    <div class="container">
+        <form>
+            <label for="text1">Add a new expense or income: </label>
+            <input type="text" id="text1" name="text1">
+            <button type="button" onclick="submitText1()">Add</button><br><br>
+            <label for="text2">Ask me a question about your budget: </label>
+            <input type="text" id="text2" name="text2">
+            <button type="button" onclick="submitText2()">Ask</button><br><br>
 
-        <label for="text2">Ask me a question about your budget: </label>
-        <input type="text" id="text2" name="text2">
-        <button type="button" onclick="submitText2()">Send</button><br><br>
+        </form>
 
-    </form>
+        <div id="response1"></div>
+        <div id="response2"></div>
 
-    <div id="response1"></div>
-    <div id="response2"></div>
+        <p class="instructions">Enter a positive number for income and a negative number for expenses. Example: -10 for
+            a $10 expense.</p>
+
+        <p class="tips">Tip: Keep track of your spending by categorizing your expenses. This can help you identify areas
+            where you can cut back.</p>
+    </div>
 
     <script src="app.js"></script>
 </body>
