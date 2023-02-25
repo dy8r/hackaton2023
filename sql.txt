@@ -1,0 +1,32 @@
+COMMANDS NEEDED TO SET UP MYSQL SERVER
+
+
+CREATE SCHEMA budget_tracker;
+
+CREATE TABLE Bank_Account (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    account_name TEXT,
+    user_id INT,
+    balance INT
+);
+
+CREATE TABLE Transactions (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    userID INT,
+    total INT,
+    date DATETIME,
+    bank_account INT,
+    comment TEXT,
+    category TEXT,
+    label TEXT,
+    item TEXT,
+    FOREIGN KEY (bank_account) REFERENCES Bank_Account(ID)
+);
+
+ALSO, ASSUME USER HAS THIS INFO IN DB (although it could also be added through web app)
+
+INSERT INTO Bank_Account (account_name, user_id, balance)
+VALUES
+('Default Bank', 1, 1000),
+('Other Bank', 1, 1000),
+('Another Bank', 1, 1000);
