@@ -1,10 +1,3 @@
-function test() {
-    // const text1 = document.getElementById("text1").value;
-
-
-    // // Send the API requests
-    // sendApiRequest("http://localhost:80/text1/", text1, "response1");
-}
 
 function submitText1() {
     // Get the input values
@@ -12,7 +5,7 @@ function submitText1() {
 
 
     // Send the API requests
-    sendApiRequest("http://localhost:80/text1/", text1, "response1");
+    sendApiRequest("http://localhost:80/newrecord/", text1, "response1");
 }
 
 function submitText2() {
@@ -20,15 +13,7 @@ function submitText2() {
     const text = document.getElementById("text2").value;
 
     // Send the API requests
-    sendApiRequest("http://localhost:80/text2/", text, "response2");
-}
-
-function submitText3() {
-    // Get the input values
-    const text = document.getElementById("text3").value;
-
-    // Send the API requests
-    sendApiRequest("http://localhost:80/text3/", text, "response3");
+    sendApiRequest("http://localhost:80/getstats/", text, "response2");
 }
 
 async function sendApiRequest(url, text, responseId) {

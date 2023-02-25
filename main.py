@@ -9,47 +9,42 @@ import os
 from time import sleep
 import requests
 from flask_cors import CORS
-from gpt import send_request_to_openai
+from gpt import send_request_to_openai_get_stat, send_request_to_openai_add_to_database
 
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
 
-class TextOne(Resource):
+class GetStats(Resource):
     def post(self):
         try:
             req = request.get_json()
             print(req)
             prompt = req['text']
-            response = send_request_to_openai(prompt)
+            response = send_request_to_openai_get_stat(prompt)
             print(response)
             return {"status": "success", 'response': response}
         except Exception as e:
             print(e)
             return {'status': str(e)}
         
-class TextTwo(Resource):
+class NewRecord(Resource):
     def post(self):
         try:
-
-            return {"status": "success"}
+            req = request.get_json()
+            print(req)
+            prompt = req['text']
+            response = send_request_to_openai_add_to_database(prompt)
+            print(response)
+            return {"status": "success", 'response': response}
         except Exception as e:
             print(e)
             return {'status': str(e)}
         
-class TextThree(Resource):
-    def post(self):
-        try:
 
-            return {"status": "success"}
-        except Exception as e:
-            print(e)
-            return {'status': str(e)}
-
-api.add_resource(TextOne, "/text1/")
-api.add_resource(TextTwo, "/text2/")
-api.add_resource(TextThree, "/text3/")
+api.add_resource(GetStats, "/getstats/")
+api.add_resource(NewRecord, "/newrecord/")
 
 if __name__ == "__main__":
     app.run(host = '0.0.0.0', port = 80, debug = False)
