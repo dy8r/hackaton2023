@@ -1,1 +1,1 @@
-# hackaton2023 Никита пидор
+# hackaton2023
