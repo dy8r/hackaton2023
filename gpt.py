@@ -17,7 +17,7 @@ Transactions (
   ID INT AUTO_INCREMENT PRIMARY KEY, -- Unique identifier for each transaction
   userID INT, -- ID of the user who made the transaction
   total INT, -- Total amount of the transaction
-  date DATETIME, -- Date and time of the transaction
+  transaction_date DATETIME, -- Date and time of the transaction
   bank_account INT, -- ID of the bank account associated with the transaction
   comment TEXT, -- Optional comment or note about the transaction
   category TEXT, -- Optional category or classification for the transaction
@@ -35,7 +35,7 @@ def send_request_to_openai_get_stat(user_prompt):
 
     response = openai.Completion.create(
         model="text-davinci-003",
-        prompt=prompt,
+        prompt=user_prompt,
         max_tokens=1024,
         n=1,
         stop=None,
@@ -80,11 +80,11 @@ def send_request_to_openai_add_to_database(user_prompt):
 
         user_id is {USER_ID}
         total is the sum of transaction
-        date - date of transaction
+        transaction_date - date of transaction
         bank account is one of: ((id: 1, name: Default Bank), (id: 2, name: Other Bank), (id: 3, name: Another Bank)) - choose the best fit. If none fits, choose the first one
         Comemnt is the full string of transaction info
 
-        Category is one of the: groceries, housing, sports, furniture, other - choose the best fit or other if none fits
+        Category is one of the: groceries, housing, sports, furniture, income,  other - choose the best fit or other if none fits
         Label is one of: home, work, partying, not specified - choose the best fit or not specified if not specified
         Item is one of: meat, apple, nuts, icecream, other - choose the best fit or other if none fits
 
@@ -92,7 +92,8 @@ def send_request_to_openai_add_to_database(user_prompt):
 
         Create a sql query to insert this record to a table
         If the prompt has multiple transactions, create a query for each transaction.
-        Reply only with a single query for each transaction, no text, no explanation. Pure code."""
+        Reply only with a single query for each transaction, no text, no explanation. Pure code.
+        We use positiev numbers to record inncome, negative numbers to record expenses"""
 
     response = openai.Completion.create(
         engine="text-davinci-003",
@@ -109,8 +110,8 @@ def send_request_to_openai_add_to_database(user_prompt):
     at_least_one_suceess = False
     for query in queries:
         print(query)
-        if(len(query) > 0):
-            status = insert_query(query)
+        if('INSERT' in query):
+            status = insert_query(query+";")
             if status == -1:
                 print(query)
             else:
@@ -120,11 +121,9 @@ def send_request_to_openai_add_to_database(user_prompt):
         return "Sorry, an error occurerd. Please try again later."
 
     if len(queries) == 1:
-        success_prompt = """Refer to the following prompt. We have added an expense record to database. Here is the query for reference: """ + queries 
-        + """ Reply with a success message. This message will be shown to user , so say somethink in the lines of: 'Success! Changes to your budget have been savved. The changes are: 'and here list eeverything that we haev recorded"""
+        success_prompt = """Refer to the following prompt. We have added an expense record to database. Here is the query for reference: """ + str(queries_str) + """ Reply with a success message. This message will be shown to user , so say something in the lines of: 'Success! Changes to your budget have been saved. The changes are: 'and here list everything that we have recorded. Do not say nothinng about the database. Do no mention userID."""
     else:
-        success_prompt = """Refer to the following prompt. We have added multiple expense records to database. Here are the queries for reference: """ + queries 
-        + """ Reply with a success message. This message will be shown to user , so say somethink in the lines of: 'Success! Changes to your budget have been savved. The changes are: 'and here list eeverything that we haev recorded"""
+        success_prompt = """Refer to the following prompt. We have added multiple expense records to database. Here are the queries for reference: """ + str(queries_str) + """ Reply with a success message. This message will be shown to user , so say something in the lines of: 'Success! Changes to your budget have been saved. The changes are: 'and here list everything that we have recorded. Do not say nothinng about the database. Do no mention userID."""
     
     response = openai.Completion.create(
         engine="text-davinci-003",
@@ -133,6 +132,5 @@ def send_request_to_openai_add_to_database(user_prompt):
         n=1,
         stop=None,
         temperature=0.2,
-    )    
-
+    ) 
     return response.choices[0].text.strip()

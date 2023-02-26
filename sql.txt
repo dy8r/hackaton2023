@@ -14,7 +14,7 @@ CREATE TABLE Transactions (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     userID INT,
     total INT,
-    date DATETIME,
+    transaction_date DATETIME,
     bank_account INT,
     comment TEXT,
     category TEXT,
